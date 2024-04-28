@@ -7,21 +7,24 @@
         public Funcionario funcionario { get; set; }
         public Fornecedor fornecedor { get; set; }
 
-        public void LeituraPostinho()
+        public bool LeituraPostinho()
         {
             string PostinhoBD = "PostinhoBD.txt";
             //1 = sim / 0 = não
-            int existe = 1;
             //Verifica se o arquivo existe
             if (!File.Exists(PostinhoBD))
             {
                 // Cria o arquivo e fecha-o imediatamente
                 File.Create(PostinhoBD).Close();
-                existe = 0;
             }
 
             //Lê as linhas do arquivo PostinhoBD.txt
             string[] linhadotxt = File.ReadAllLines(PostinhoBD);
+            bool ExisteInformacaoNoArquivo = true;
+            if (linhadotxt == null)
+            {
+                ExisteInformacaoNoArquivo = false;
+            }
 
             string bairro = "", telefoneFormatado = "";
             int numerodaunidade = 0;
@@ -34,33 +37,36 @@
                 bairro = coluna[0];
                 telefoneFormatado = coluna[1];
                 numerodaunidade = int.Parse(coluna[2]);
-                existe = int.Parse(coluna[3]);
             }
-            Postinho = new Posto(bairro, telefoneFormatado, numerodaunidade, existe);
+            Postinho = new Posto(bairro, telefoneFormatado, numerodaunidade);
+            return ExisteInformacaoNoArquivo;
         }
         public void SalvarPostinho()
         {
             string PostinhoBD = "PostinhoBD.txt";
             // Prepara a linha para ser escrita no arquivo
-            string linha = $"{Postinho.Bairro},{Postinho.TelefoneFormatado},{Postinho.NumeroDaUnidade},{Postinho.Existe}";
+            string linha = $"{Postinho.Bairro},{Postinho.TelefoneFormatado},{Postinho.NumeroDaUnidade}";
             // Escreve a linha no arquivo
             File.AppendAllText(PostinhoBD, linha + Environment.NewLine);
         }
-        public void LeituraFuncionario()
+        public bool LeituraFuncionario()
         {
             string FuncionarioBD = "FuncionarioBD.txt";
-            //1 = sim / 0 = não
-            int existe = 1;
             //Verifica se o arquivo existe
             if (!File.Exists(FuncionarioBD))
             {
                 // Cria o arquivo e fecha-o imediatamente
                 File.Create(FuncionarioBD).Close();
-                existe = 0;
             }
 
             //Lê as linhas do arquivo FuncionarioBD.txt
             string[] linhadotxt = File.ReadAllLines(FuncionarioBD);
+
+            bool ExisteInformacaoNoArquivo = true;
+            if (linhadotxt == null)
+            {
+                ExisteInformacaoNoArquivo = false;
+            }
 
             string nome = "", email = "", senha = "", genero = "", cpfformatado = "", cargo = "";
             int idade = 0, matricula = 0;
@@ -78,9 +84,9 @@
                 matricula = int.Parse(coluna[5]);
                 email = coluna[6];
                 senha = coluna[7];
-                existe = int.Parse(coluna[8]);
             }
-            funcionario = new Funcionario(nome, idade, genero, cpfformatado, cargo, matricula, email, senha, existe);
+            funcionario = new Funcionario(nome, idade, genero, cpfformatado, cargo, matricula, email, senha);
+            return ExisteInformacaoNoArquivo;
         }
         public void SalvarFuncionario()
         {
@@ -90,21 +96,24 @@
             // Escreve a linha no arquivo
             File.AppendAllText(FuncionarioBD, linha + Environment.NewLine);
         }
-        public void LeituraForncedor()
+        public bool LeituraForncedor()
         {
             string FornecedorBD = "FornecedorBD.txt";
-            //1 = sim / 0 = não
-            int existe = 1;
             //Verifica se o arquivo existe
             if (!File.Exists(FornecedorBD))
             {
                 // Cria o arquivo e fecha-o imediatamente
                 File.Create(FornecedorBD).Close();
-                existe = 0;
             }
 
             //Lê as linhas do arquivo FornecedorBD.txt
             string[] linhadotxt = File.ReadAllLines(FornecedorBD);
+
+            bool ExisteInformacaoNoArquivo = true;
+            if (linhadotxt == null)
+            {
+                ExisteInformacaoNoArquivo = false;
+            }
 
             string nome = "", cnpjformatado = "", email = "";
             int prazo = 0;
@@ -118,17 +127,59 @@
                 cnpjformatado = coluna[1];
                 email = coluna[2];
                 prazo = int.Parse(coluna[3]);
-                existe = int.Parse(coluna[4]);
             }
-            fornecedor = new Fornecedor(nome, cnpjformatado, email, prazo, existe);
+            fornecedor = new Fornecedor(nome, cnpjformatado, email, prazo);
+            return ExisteInformacaoNoArquivo;
         }
         public void SalvarForncedor()
         {
             string FornecedorBD = "FornecedorBD.txt";
             // Prepara a linha para ser escrita no arquivo
-            string linha = $"{fornecedor.Nome},{fornecedor.CNPJFormatado},{fornecedor.Email},{fornecedor.Prazo},{fornecedor.Existe}";
+            string linha = $"{fornecedor.Nome},{fornecedor.CNPJFormatado},{fornecedor.Email},{fornecedor.Prazo}";
             // Escreve a linha no arquivo
             File.AppendAllText(FornecedorBD, linha + Environment.NewLine);
+        }
+        public bool LeituraMedicamento()
+        {
+            string PostinhoBD = "PostinhoBD.txt";
+            //1 = sim / 0 = não
+            //Verifica se o arquivo existe
+            if (!File.Exists(PostinhoBD))
+            {
+                // Cria o arquivo e fecha-o imediatamente
+                File.Create(PostinhoBD).Close();
+            }
+
+            //Lê as linhas do arquivo PostinhoBD.txt
+            string[] linhadotxt = File.ReadAllLines(PostinhoBD);
+            bool ExisteInformacaoNoArquivo = true;
+            if (linhadotxt == null)
+            {
+                ExisteInformacaoNoArquivo = false;
+            }
+
+            string bairro = "", telefoneFormatado = "";
+            int numerodaunidade = 0;
+
+            foreach (string linhalida in linhadotxt)
+            {
+                // Divide a linha em partes usando a vírgula como separador
+                string[] coluna = linhalida.Split(',');
+
+                bairro = coluna[0];
+                telefoneFormatado = coluna[1];
+                numerodaunidade = int.Parse(coluna[2]);
+            }
+            Postinho = new Posto(bairro, telefoneFormatado, numerodaunidade);
+            return ExisteInformacaoNoArquivo;
+        }
+        public void SalvarMedicamento()
+        {
+            string PostinhoBD = "PostinhoBD.txt";
+            // Prepara a linha para ser escrita no arquivo
+            string linha = $"{Postinho.Bairro},{Postinho.TelefoneFormatado},{Postinho.NumeroDaUnidade}";
+            // Escreve a linha no arquivo
+            File.AppendAllText(PostinhoBD, linha + Environment.NewLine);
         }
 
     }
@@ -136,27 +187,24 @@
     {
         public string Bairro = "", TelefoneFormatado = "";
         public int NumeroDaUnidade;
-        public int Existe;
 
-        public Posto(string bairro, string telefoneFormatado, int numerodaunidade, int existe)
+        public Posto(string bairro, string telefoneFormatado, int numerodaunidade)
         {
             Bairro = bairro;
             NumeroDaUnidade = numerodaunidade;
             TelefoneFormatado = telefoneFormatado;
-            Existe = existe;
         }
     }
     public class Funcionario
     {
         public string Nome = "", Email = "", CPFFormatado = "", Cargo = "", Senha = "", Genero = "";
-        public int Idade, Matricula, Existe;
+        public int Idade, Matricula;
 
-        public Funcionario(string nome, int idade, string genero, string cpfformatado, string cargo, int matricula, string email, string senha, int existe)
+        public Funcionario(string nome, int idade, string genero, string cpfformatado, string cargo, int matricula, string email, string senha)
         {
             Nome = nome;
             Idade = idade;
             Genero = genero;
-            Existe = existe;
             CPFFormatado = cpfformatado;
             Cargo = cargo;
             Matricula = matricula;
@@ -167,15 +215,14 @@
     public class Fornecedor
     {
         public string Nome = "", Email = "", CNPJFormatado = "";
-        public int Prazo, Existe;
+        public int Prazo;
 
-        public Fornecedor(string nome, string cnpjformatado, string email, int prazo, int existe)
+        public Fornecedor(string nome, string cnpjformatado, string email, int prazo)
         {
             Nome = nome;
             CNPJFormatado = cnpjformatado;
             Email = email;
             Prazo = prazo;
-            Existe = existe;
         }
     }
     public class Medicamento

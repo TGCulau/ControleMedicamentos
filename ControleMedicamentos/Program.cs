@@ -2,16 +2,15 @@
 {
     public class Program
     {
-
         public static void Main()
         {
-            Tela Display = new Tela();
-            Funcoes Ferramentas = new Funcoes();
-            Repositorio Repositorios = new Repositorio();
+            Repositorio repositorio = new Repositorio();
+            Mensagens mensagem = new Mensagens();
+            Funcoes ferramenta = new Funcoes(null, mensagem, repositorio);
+            Tela Display = new Tela(ferramenta, mensagem, repositorio);
 
 
             Display.ChecagemPreLogin();
-
             Display.Login();
 
         }
@@ -76,7 +75,15 @@
 
     public class Tela : Repositorio
     {
-
+        Funcoes ferramenta;
+        Mensagens mensagem;
+        Repositorio repositorio;
+        public Tela(Funcoes ferramenta, Mensagens mensagem, Repositorio repositorio)
+        {
+            this.ferramenta = ferramenta;
+            this.mensagem = mensagem;
+            this.repositorio = repositorio;
+        }
 
         public void ChecagemPreLogin()
         {
@@ -98,8 +105,8 @@
             string bairro = Console.ReadLine();
             string telefoneFormatado = ferramenta.OrganizarTelefone();
             int numerodaunidade = ferramenta.LerInt("\nDigite o numero da unidade: ");
-            int existe = 1;
-            Postinho = new Posto(bairro, telefoneFormatado, numerodaunidade, existe);
+
+            Postinho = new Posto(bairro, telefoneFormatado, numerodaunidade);
 
             repositorio.SalvarPostinho();
 
@@ -121,9 +128,8 @@
             string email = Console.ReadLine();
             Console.Write("\nSenha: ");
             string senha = Console.ReadLine();
-            int existe = 1;
 
-            funcionario = new Funcionario(nome, idade, genero, cpfformatado, cargo, matricula, email, senha, existe);
+            funcionario = new Funcionario(nome, idade, genero, cpfformatado, cargo, matricula, email, senha);
 
             repositorio.SalvarFuncionario();
 
@@ -138,15 +144,18 @@
             Console.Write("\nEmail: ");
             string email = Console.ReadLine();
             int prazo = ferramenta.LerInt("\nPrazo de entrega dos medicamentos: ");
-            int existe = 1;
 
-            fornecedor = new Fornecedor(nome, cnpjformatado, email, prazo, existe);
+            fornecedor = new Fornecedor(nome, cnpjformatado, email, prazo);
 
             repositorio.SalvarForncedor();
 
             mensagem.CadastroComSucesso();
         }
+
+
+
     }
 
-
 }
+
+

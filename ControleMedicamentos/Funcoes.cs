@@ -2,9 +2,16 @@
 {
     public class Funcoes : Repositorio
     {
-        public Tela display { get; set; }
-        Mensagens mensagem = new Mensagens();
-        Repositorio repositorio = new Repositorio();
+        Tela display;
+        Mensagens mensagem;
+        Repositorio repositorio;
+
+        public Funcoes(Tela display, Mensagens mensagem, Repositorio repositorio)
+        {
+            this.display = display;
+            this.mensagem = mensagem;
+            this.repositorio = repositorio;
+        }
 
         public int LerInt(string texto)
         {
@@ -33,24 +40,24 @@
         }
         public void CheckFornecedor()
         {
-            repositorio.LeituraForncedor();
-            if (fornecedor.Existe == 0)
+            bool existeInformacaoNoArquivo = repositorio.LeituraForncedor();
+            if (existeInformacaoNoArquivo == false)
             {
                 display.CadastroFornecedor();
             }
         }
         public void CheckFuncionario()
         {
-            repositorio.LeituraFuncionario();
-            if (funcionario.Existe == 0)
+            bool existeInformacaoNoArquivo = repositorio.LeituraFuncionario();
+            if (existeInformacaoNoArquivo == false)
             {
                 display.CadastroFuncionario();
             }
         }
         public void CheckPostinho()
         {
-            repositorio.LeituraPostinho();
-            if (Postinho.Existe == 0)
+            bool existeInformacaoNoArquivo = repositorio.LeituraPostinho();
+            if (existeInformacaoNoArquivo == false)
             {
                 display.CadastroPosto();
             }

@@ -4,24 +4,34 @@
     {
         public static void Main()
         {
+            #region CaixaDeTralha
             Repositorio repositorio = new Repositorio();
-            Mensagens mensagem = new Mensagens();
-            Funcoes ferramenta = new Funcoes(null, mensagem, repositorio);
-            Tela Display = new Tela(ferramenta, mensagem, repositorio);
-
+            Funcoes ferramenta = new Funcoes(null, repositorio);
+            Tela Display = new Tela(ferramenta);
+            #endregion CaixaDeTralha
 
             Display.ChecagemPreLogin();
+
             Display.Login();
 
+            Display.MenuPrincipal();
         }
     }
 
-    public class Mensagens
+    public class Mensagens : Repositorio
     {
-        public void CadastroComSucesso()
+        public void Cabecalho()
         {
-            Cabecalho();
-            Console.Write("Cadastro efetuado com sucesso!\n\nPrecione qualquer tecla para continuar.");
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.Clear();
+            Console.WriteLine("########################################################################################################################");
+            Console.WriteLine("###                                                                                                                  ###");
+            Console.WriteLine("###                                           Secretaria de Saúde de Lages                                           ###");
+            Console.WriteLine("###                                                                                                                  ###");
+            Console.WriteLine("###                                                  Farmácia Básica                                                 ###");
+            Console.WriteLine("###                                                                                                                  ###");
+            Console.WriteLine("########################################################################################################################\n");
+            Console.ResetColor();
         }
         public void Erro()
         {
@@ -40,18 +50,10 @@
             Console.ReadKey();
             Cabecalho();
         }
-        public void Cabecalho()
+        public void CadastroComSucesso()
         {
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
-            Console.Clear();
-            Console.WriteLine("########################################################################################################################");
-            Console.WriteLine("###                                                                                                                  ###");
-            Console.WriteLine("###                                           Secretaria de Saúde de Lages                                           ###");
-            Console.WriteLine("###                                                                                                                  ###");
-            Console.WriteLine("###                                                  Farmácia Básica                                                 ###");
-            Console.WriteLine("###                                                                                                                  ###");
-            Console.WriteLine("########################################################################################################################\n");
-            Console.ResetColor();
+            Cabecalho();
+            Console.Write("Cadastro efetuado com sucesso!\n\nPrecione qualquer tecla para continuar.");
         }
         public void LoginErrado()
         {
@@ -70,20 +72,36 @@
             Console.ReadKey();
             Cabecalho();
         }
+        public void Saudacao()
+        {
+            string bemvindo = "Bem-Vind", pronome = "";
 
+            if (funcionario.Genero == "Homem")
+            {
+                bemvindo += "o";
+                pronome = "Sr.";
+            }
+            else if (funcionario.Genero == "Mulher")
+            {
+                bemvindo += "a";
+                pronome = "Sra.";
+            }
+            Cabecalho();
+            Console.Write($"Seja {bemvindo} {pronome}{funcionario.Nome}.");
+        }
+        public void SolicitarMaisRemédio()
+        {
+            if ()
+                Console.Write("\n\n");
+
+            edicamento.
+        }
     }
 
-    public class Tela : Repositorio
+    public class Tela(Funcoes ferramenta) : Mensagens
     {
-        Funcoes ferramenta;
+        Funcoes ferramenta = ferramenta;
         Mensagens mensagem;
-        Repositorio repositorio;
-        public Tela(Funcoes ferramenta, Mensagens mensagem, Repositorio repositorio)
-        {
-            this.ferramenta = ferramenta;
-            this.mensagem = mensagem;
-            this.repositorio = repositorio;
-        }
 
         public void ChecagemPreLogin()
         {
@@ -98,64 +116,15 @@
             ferramenta.LoginEmail("\n\nEmail: ");
             ferramenta.LoginSenha("\n\nSenha: ");
         }
-        public void CadastroPosto()
+        public void MenuPrincipal()
         {
-            mensagem.Cabecalho();
-            Console.Write("O sistema não detectou nenhum posto cadastrado, por favor insira os seguintes dados.\n\nNome do bairro: ");
-            string bairro = Console.ReadLine();
-            string telefoneFormatado = ferramenta.OrganizarTelefone();
-            int numerodaunidade = ferramenta.LerInt("\nDigite o numero da unidade: ");
+            mensagem.Saudacao();
+            Console.Write("\n\n\nMenu Principal\n1. Novos cadastros internos\n2. Prontuario\n3. Solicitar Remedio\n4. Verficiar o Estoque\n5.Logout");
 
-            Postinho = new Posto(bairro, telefoneFormatado, numerodaunidade);
 
-            repositorio.SalvarPostinho();
 
-            mensagem.CadastroComSucesso();
         }
-        public void CadastroFuncionario()
-        {
-            mensagem.Cabecalho();
-            Console.Write("O sistema não detectou nenhum funcionário cadastrado, por favor insira os seguintes dados.\n\nNome: ");
-            string nome = Console.ReadLine();
-            int idade = ferramenta.LerInt("\nIdade: ");
-            Console.Write("\nGenero: ");
-            string genero = Console.ReadLine();
-            string cpfformatado = ferramenta.OrganizarCPF();
-            Console.Write("\nCargo: ");
-            string cargo = Console.ReadLine();
-            int matricula = ferramenta.LerInt("\nMatricula: ");
-            Console.Write("\nEmail: ");
-            string email = Console.ReadLine();
-            Console.Write("\nSenha: ");
-            string senha = Console.ReadLine();
-
-            funcionario = new Funcionario(nome, idade, genero, cpfformatado, cargo, matricula, email, senha);
-
-            repositorio.SalvarFuncionario();
-
-            mensagem.CadastroComSucesso();
-        }
-        public void CadastroFornecedor()
-        {
-            mensagem.Cabecalho();
-            Console.Write("O sistema não detectou nenhum forncedor cadastrado, por favor insira os seguintes dados.\n\nNome do fornecedor: ");
-            string nome = Console.ReadLine();
-            string cnpjformatado = ferramenta.OrganizarCNPJ();
-            Console.Write("\nEmail: ");
-            string email = Console.ReadLine();
-            int prazo = ferramenta.LerInt("\nPrazo de entrega dos medicamentos: ");
-
-            fornecedor = new Fornecedor(nome, cnpjformatado, email, prazo);
-
-            repositorio.SalvarForncedor();
-
-            mensagem.CadastroComSucesso();
-        }
-
-
-
     }
-
 }
 
 

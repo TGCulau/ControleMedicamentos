@@ -5,14 +5,11 @@
         Tela display;
         Mensagens mensagem;
         Repositorio repositorio;
-
-        public Funcoes(Tela display, Mensagens mensagem, Repositorio repositorio)
+        public Funcoes(Tela display, Repositorio repositorio)
         {
             this.display = display;
-            this.mensagem = mensagem;
             this.repositorio = repositorio;
         }
-
         public int LerInt(string texto)
         {
             while (true)
@@ -43,7 +40,7 @@
             bool existeInformacaoNoArquivo = repositorio.LeituraForncedor();
             if (existeInformacaoNoArquivo == false)
             {
-                display.CadastroFornecedor();
+                CadastroFornecedor();
             }
         }
         public void CheckFuncionario()
@@ -51,7 +48,7 @@
             bool existeInformacaoNoArquivo = repositorio.LeituraFuncionario();
             if (existeInformacaoNoArquivo == false)
             {
-                display.CadastroFuncionario();
+                CadastroFuncionario();
             }
         }
         public void CheckPostinho()
@@ -59,7 +56,27 @@
             bool existeInformacaoNoArquivo = repositorio.LeituraPostinho();
             if (existeInformacaoNoArquivo == false)
             {
-                display.CadastroPosto();
+                CadastroPosto();
+            }
+        }
+        public string CheckGenero(string texto)
+        {
+            while (true)
+            {
+                Console.Write(texto);
+                var digitouNumero = int.TryParse(Console.ReadLine(), out var numero);
+                if (!digitouNumero)
+                {
+                    mensagem.Erro();
+                    continue;
+                }
+                if (numero != 1 && numero != 2)
+                {
+                    mensagem.Erro();
+                    continue;
+                }
+                string genero = Convert.ToString(numero);
+                return genero;
             }
         }
         public string OrganizarCPF()
@@ -295,6 +312,65 @@
                 }
             }
         }
+        public void CadastroPosto()
+        {
+            mensagem.Cabecalho();
+            Console.Write("O sistema não detectou nenhum posto cadastrado, por favor insira os seguintes dados.\n\nNome do bairro: ");
+            string bairro = Console.ReadLine();
+            string telefoneFormatado = OrganizarTelefone();
+            int numerodaunidade = LerInt("\nDigite o numero da unidade: ");
+
+            postinho = new Posto(bairro, telefoneFormatado, numerodaunidade);
+
+            repositorio.SalvarPostinho();
+
+            mensagem.CadastroComSucesso();
+        }
+        public void CadastroFuncionario()
+        {
+            mensagem.Cabecalho();
+            Console.Write("O sistema não detectou nenhum funcionário cadastrado, por favor insira os seguintes dados.\n\nNome: ");
+            string nome = Console.ReadLine();
+            int idade = LerInt("\nIdade: ");
+            string genero = CheckGenero("\nGenero\n1. Homem\n2. Mulher\nSua opção: ");
+            string cpfformatado = OrganizarCPF();
+            Console.Write("\nCargo: ");
+            string cargo = Console.ReadLine();
+            int matricula = LerInt("\nMatricula: ");
+            Console.Write("\nEmail: ");
+            string email = Console.ReadLine();
+            Console.Write("\nSenha: ");
+            string senha = Console.ReadLine();
+
+            funcionario = new Funcionario(nome, idade, genero, cpfformatado, cargo, matricula, email, senha);
+
+            repositorio.SalvarFuncionario();
+
+            mensagem.CadastroComSucesso();
+        }
+        public void CadastroFornecedor()
+        {
+            mensagem.Cabecalho();
+            Console.Write("O sistema não detectou nenhum forncedor cadastrado, por favor insira os seguintes dados.\n\nNome do fornecedor: ");
+            string nome = Console.ReadLine();
+            string cnpjformatado = OrganizarCNPJ();
+            Console.Write("\nEmail: ");
+            string email = Console.ReadLine();
+            int prazo = LerInt("\nPrazo de entrega dos medicamentos: ");
+
+            fornecedor = new Fornecedor(nome, cnpjformatado, email, prazo);
+
+            repositorio.SalvarForncedor();
+
+            mensagem.CadastroComSucesso();
+        }
+
+
+
+
+
+
+
 
 
 
@@ -351,7 +427,7 @@
                 return data;
             }
         }
-        public int VerificacaoRemedsio(int NI)
+        public int VerificacaoRemedio(int NI)
         {
             int opcaomenu = 0;
             if (NI == -1)
@@ -365,7 +441,4 @@
             return opcaomenu;
         }
     }
-
-
-
 }

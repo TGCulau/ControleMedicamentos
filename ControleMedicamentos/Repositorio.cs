@@ -3,9 +3,10 @@
 {
     public class Repositorio
     {
-        public Posto Postinho { get; set; }
+        public Posto postinho { get; set; }
         public Funcionario funcionario { get; set; }
         public Fornecedor fornecedor { get; set; }
+        public Medicamento medicamento { get; set; }
 
         public bool LeituraPostinho()
         {
@@ -20,6 +21,7 @@
 
             //Lê as linhas do arquivo PostinhoBD.txt
             string[] linhadotxt = File.ReadAllLines(PostinhoBD);
+
             bool ExisteInformacaoNoArquivo = true;
             if (linhadotxt == null)
             {
@@ -38,14 +40,14 @@
                 telefoneFormatado = coluna[1];
                 numerodaunidade = int.Parse(coluna[2]);
             }
-            Postinho = new Posto(bairro, telefoneFormatado, numerodaunidade);
+            postinho = new Posto(bairro, telefoneFormatado, numerodaunidade);
             return ExisteInformacaoNoArquivo;
         }
         public void SalvarPostinho()
         {
             string PostinhoBD = "PostinhoBD.txt";
             // Prepara a linha para ser escrita no arquivo
-            string linha = $"{Postinho.Bairro},{Postinho.TelefoneFormatado},{Postinho.NumeroDaUnidade}";
+            string linha = $"{postinho.Bairro},{postinho.TelefoneFormatado},{postinho.NumeroDaUnidade}";
             // Escreve a linha no arquivo
             File.AppendAllText(PostinhoBD, linha + Environment.NewLine);
         }
@@ -141,46 +143,121 @@
         }
         public bool LeituraMedicamento()
         {
-            string PostinhoBD = "PostinhoBD.txt";
-            //1 = sim / 0 = não
+            string MedicamentoBD = "MedicamentoBD.txt";
             //Verifica se o arquivo existe
-            if (!File.Exists(PostinhoBD))
+            if (!File.Exists(MedicamentoBD))
             {
                 // Cria o arquivo e fecha-o imediatamente
-                File.Create(PostinhoBD).Close();
+                File.Create(MedicamentoBD).Close();
             }
 
-            //Lê as linhas do arquivo PostinhoBD.txt
-            string[] linhadotxt = File.ReadAllLines(PostinhoBD);
+            //Lê as linhas do arquivo MedicamentoBD.txt
+            string[] linhadotxt = File.ReadAllLines(MedicamentoBD);
+
             bool ExisteInformacaoNoArquivo = true;
             if (linhadotxt == null)
             {
                 ExisteInformacaoNoArquivo = false;
             }
 
-            string bairro = "", telefoneFormatado = "";
-            int numerodaunidade = 0;
-
             foreach (string linhalida in linhadotxt)
             {
                 // Divide a linha em partes usando a vírgula como separador
                 string[] coluna = linhalida.Split(',');
 
-                bairro = coluna[0];
-                telefoneFormatado = coluna[1];
-                numerodaunidade = int.Parse(coluna[2]);
+                string nome = coluna[0];
+                string tipo = coluna[1];
+                bool eControlado = true;
+                int econtrolado = int.Parse(coluna[2]);
+                int quantidadeDeComprimidosPorCaixa = int.Parse(coluna[3]);
+                int prazoParaAviso = int.Parse(coluna[4]);
+                int existeInformacaoNoArquivo = int.Parse(coluna[5]);
+                if (econtrolado == 0)
+                {
+                    eControlado = false;
+                }
+
+                medicamento = new Medicamento(nome, tipo, eControlado, quantidadeDeComprimidosPorCaixa, prazoParaAviso, existeInformacaoNoArquivo);
             }
-            Postinho = new Posto(bairro, telefoneFormatado, numerodaunidade);
+
             return ExisteInformacaoNoArquivo;
         }
         public void SalvarMedicamento()
         {
-            string PostinhoBD = "PostinhoBD.txt";
+            string MedicamentoBD = "MedicamentoBD.txt";
             // Prepara a linha para ser escrita no arquivo
-            string linha = $"{Postinho.Bairro},{Postinho.TelefoneFormatado},{Postinho.NumeroDaUnidade}";
+
+            string linha = $"{medicamento.Nome}, {medicamento.Tipo}, {medicamento.EControlado}, {medicamento.QuantidadeDeComprimidosPorCaixa}, {medicamento.PrazoParaAviso}, {medicamento.ExisteInformacaoNoArquivo}";
             // Escreve a linha no arquivo
-            File.AppendAllText(PostinhoBD, linha + Environment.NewLine);
+            File.AppendAllText(MedicamentoBD, linha + Environment.NewLine);
         }
+
+        //public bool LeituraMedicamento()
+        //public List<Medicamento> LeituraMedicamento()
+        //{
+        //    string MedicamentoBD = "MedicamentoBD.txt";
+        //    //Verifica se o arquivo existe
+        //    if (!File.Exists(MedicamentoBD))
+        //    {
+        //        // Cria o arquivo e fecha-o imediatamente
+        //        File.Create(MedicamentoBD).Close();
+        //    }
+
+        //    //Lê as linhas do arquivo MedicamentoBD.txt
+        //    string[] linhadotxt = File.ReadAllLines(MedicamentoBD);
+
+        //    int existeInformacaoNoArquivo = 1;
+        //    if (linhadotxt == null)
+        //    {
+        //        existeInformacaoNoArquivo = 0;
+        //    }
+
+
+        //    bool eControlado = true;
+        //    int cont = 0;
+        //    foreach (string linhalida in linhadotxt)
+        //    {
+        //        // Divide a linha em partes usando a vírgula como separador
+        //        string[] coluna = linhalida.Split(',');
+
+        //        string nome = coluna[0];
+        //        string tipo = coluna[1];
+        //        int econtrolado = int.Parse(coluna[2]);
+        //        if (econtrolado == 1)
+        //        {
+        //            eControlado = true;
+        //        }
+        //        int quantidadeDeComprimidosPorCaixa = int.Parse(coluna[3]);
+        //        int prazoParaAviso = int.Parse(coluna[4]);
+
+        //        Medicamento medicamento = new Medicamento(nome, tipo, eControlado, quantidadeDeComprimidosPorCaixa, prazoParaAviso, existeInformacaoNoArquivo);
+        //        medicamentos.Add(medicamento);
+        //    }
+        //    return medicamentos;
+        //}
+        //public void SalvarMedicamento(Medicamento medicamento)
+        //{
+        //    string MedicamentoBD = "MedicamentoBD.txt";
+        //    // Prepara a linha para ser escrita no arquivo
+        //    string linha = $"{medicamento.Nome},{medicamento.Tipo},{medicamento.EControlado},{medicamento.QuantidadeDeComprimidosPorCaixa},{medicamento.PrazoParaAviso},";
+        //    // Escreve a linha no arquivo
+        //    File.AppendAllText(MedicamentoBD, linha + Environment.NewLine);
+        //}
+        //public void SalvarTodosMedicamentos()
+        //{
+        //    foreach (var medicamento in medicamentos)
+        //    {
+        //        SalvarMedicamento(medicamento);
+        //    }
+        //}
+        //public void SalvarMedicamento()
+        //{
+        //    string MedicamentoBD = "MedicamentoBD.txt";
+        //    // Prepara a linha para ser escrita no arquivo
+        //    string linha = $"{medicamento.Nome},{medicamento.Tipo},{medicamento.EControlado},{medicamento.QuantidadeDeComprimidosPorCaixa},{medicamento.PrazoParaAviso}\n";
+        //    // Escreve a linha no arquivo
+        //    File.AppendAllText(MedicamentoBD, linha + Environment.NewLine);
+        //}
 
     }
     public class Posto
@@ -229,15 +306,16 @@
     {
         public string Nome = "", Tipo = "";
         public bool EControlado;
-        public int QuantidadeDeComprimidosPorCaixa, PrazoParaAviso;
+        public int QuantidadeDeComprimidosPorCaixa, PrazoParaAviso, ExisteInformacaoNoArquivo;
 
-        public Medicamento(string nome, string tipo, bool econtrolado, int quantidadeDeComprimidosPorCaixa, int prazoParaAviso)
+        public Medicamento(string nome, string tipo, bool eControlado, int quantidadeDeComprimidosPorCaixa, int prazoParaAviso, int existeInformacaoNoArquivo)
         {
             Nome = nome;
             Tipo = tipo;
-            EControlado = econtrolado;
+            EControlado = eControlado;
             QuantidadeDeComprimidosPorCaixa = quantidadeDeComprimidosPorCaixa;
             PrazoParaAviso = prazoParaAviso;
+            ExisteInformacaoNoArquivo = existeInformacaoNoArquivo;
         }
     }
     public class Paciente
